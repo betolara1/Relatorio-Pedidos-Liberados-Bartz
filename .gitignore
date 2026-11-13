@@ -1,0 +1,35 @@
+# Arquivos de compilação e empacotamento Maven
+target/
+dependency-reduced-pom.xml
+
+# Pastas e arquivos de distribuição / instaladores
+dist/
+*.exe
+*.zip
+*.jar
+
+# Arquivos de configuração de ambiente com credenciais sensíveis
+.env
+!.env.example
+
+# IDEs e Editores
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.project
+.classpath
+bin/
+
+# Logs e relatórios de erro
+*.log
+hs_err_pid*
+replay_pid*
+
+# Arquivos do Sistema Operacional
+Thumbs.db
+Desktop.ini
+.DS_Store
+
