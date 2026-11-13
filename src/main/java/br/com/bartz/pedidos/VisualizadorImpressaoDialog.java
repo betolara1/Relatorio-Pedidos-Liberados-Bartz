@@ -1,7 +1,6 @@
 package br.com.bartz.pedidos;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
