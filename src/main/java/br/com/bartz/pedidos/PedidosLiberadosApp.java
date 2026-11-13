@@ -452,8 +452,8 @@ public class PedidosLiberadosApp extends JFrame {
     }
 
     /**
-     * Imprime tudo o que foi pesquisado na tabela,
-     * abrindo a janela padrão de impressão do Windows (com opção de impressora ou salvar em PDF).
+     * Abre a janela de visualização de impressão no modo Paisagem (Deitado)
+     * com fontes ampliadas e opções de impressão direta ou exportação/visualização como PDF no navegador.
      */
     private void imprimir() {
         if (modeloTabela.getRowCount() == 0) {
@@ -464,41 +464,33 @@ public class PedidosLiberadosApp extends JFrame {
         }
 
         try {
-            // Título do relatório impresso de acordo com a pesquisa feita
-            String titulo;
+            String subtitulo;
             String textoPedido = campoPedido.getText().trim();
 
             if (!textoPedido.isEmpty()) {
-                titulo = "Relatório de Pedidos Liberados - Pedido Nº " + textoPedido;
+                subtitulo = "Relatório do Pedido Liberado Nº " + textoPedido;
             } else {
                 LocalDate dataIni = lerData(spinnerInicio);
                 LocalDate dataFim = lerData(spinnerFim);
-                titulo = "Relatório de Pedidos Liberados - Período: " +
+                subtitulo = "Relatório de Pedidos Liberados — Período: " +
                         dataIni.format(FORMATO_TELA) + " a " + dataFim.format(FORMATO_TELA);
             }
 
-            MessageFormat cabecalho = new MessageFormat(titulo);
-            MessageFormat rodape    = new MessageFormat("Página {0}  |  Total: " + modeloTabela.getRowCount() + " pedido(s)");
-
-            // Exibe a janela de impressão nativa do sistema (FIT_WIDTH ajusta as colunas na largura da página)
-            boolean impresso = tabela.print(
-                    JTable.PrintMode.FIT_WIDTH,
-                    cabecalho,
-                    rodape
-            );
-
-            if (impresso) {
-                labelStatus.setText("Impressão enviada com sucesso.");
-            } else {
-                labelStatus.setText("Impressão cancelada pelo usuário.");
+            // Coleta os registros exibidos na tabela
+            List<Object[]> linhas = new ArrayList<>();
+            for (int r = 0; r < modeloTabela.getRowCount(); r++) {
+                Object nro = modeloTabela.getValueAt(r, 0);
+                Object dt  = modeloTabela.getValueAt(r, 1);
+                linhas.add(new Object[]{nro, dt});
             }
-        } catch (PrinterException ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Não foi possível imprimir: " + ex.getMessage(),
-                    "Erro de Impressão", JOptionPane.ERROR_MESSAGE);
+
+            RelatorioImpressao relatorio = new RelatorioImpressao(subtitulo, linhas);
+            VisualizadorImpressaoDialog visualizador = new VisualizadorImpressaoDialog(this, relatorio);
+            visualizador.setVisible(true);
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
-                    "Erro ao gerar impressão: " + ex.getMessage(),
+                    "Erro ao gerar relatório de impressão: " + ex.getMessage(),
                     "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
